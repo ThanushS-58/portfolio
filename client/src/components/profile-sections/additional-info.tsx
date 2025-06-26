@@ -159,19 +159,28 @@ export default function AdditionalInfo({ data, onChange }: AdditionalInfoProps) 
                 <Label htmlFor="activities" className="text-sm font-medium text-slate-700">
                   Activities (comma separated)
                 </Label>
-                <textarea
+                <Textarea
                   id="activities"
                   placeholder="Basketball team captain, Debate club member, Science fair organizer"
                   rows={4}
-                  className="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
-                  value={Array.isArray(data.extracurricularActivities) ? data.extracurricularActivities.join(', ') : ''}
+                  className="input-field resize-none"
+                  value={Array.isArray(data.extracurricularActivities) ? data.extracurricularActivities.join(', ') : data.extracurricularActivities || ''}
                   onChange={(e) => {
                     const inputText = e.target.value;
-                    // Store as array for backend, but allow free text input
-                    const activitiesArray = inputText.split(',').map(item => item.trim()).filter(item => item.length > 0);
+                    // Store as string first, then convert to array on blur
                     onChange({ 
-                      extracurricularActivities: inputText.includes(',') ? activitiesArray : [inputText].filter(Boolean)
+                      extracurricularActivities: inputText
                     });
+                  }}
+                  onBlur={(e) => {
+                    const inputText = e.target.value;
+                    if (inputText.trim()) {
+                      // Convert to array when user finishes typing
+                      const activitiesArray = inputText.split(',').map(item => item.trim()).filter(item => item.length > 0);
+                      onChange({ 
+                        extracurricularActivities: activitiesArray
+                      });
+                    }
                   }}
                 />
                 <p className="text-xs text-slate-500">
