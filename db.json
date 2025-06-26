@@ -1,0 +1,108 @@
+{
+  "profiles": [
+    {
+      "fullName": "thanush s",
+      "email": "thanush205s@gmail.com",
+      "phone": "+918248289043",
+      "dateOfBirth": "2005-10-06",
+      "linkedinUrl": "https://www.linkedin.com/in/thanush-s-464439290/",
+      "githubUrl": "https://github.com/ThanushS-58/",
+      "address": "72,Sengunthapuram 3rd cross,Karur-2.",
+      "careerObjective": "Motivated B.Tech IT student seeking an internship to apply programming and web development skills. Eager to contribute to real-world\nprojects, learn new technologies, and grow as a tech professional in a dynamic environment.",
+      "professionalSummary": "Motivated and detail-oriented B.Tech Information Technology student at M. Kumarasamy College of Engineering, with a strong foundation in programming, database management, and web development. Skilled in languages such as C, Python, Java, HTML, CSS, PHP, and SQL, with hands-on experience in building real-world applications like personal finance systems, doctor-patient portals, and advanced AI-based resume screeners. Demonstrates a keen interest in software development, AI/ML, and user-centered design. Known for problem-solving, adaptability, and a collaborative mindset, with experience in social media marketing and project-based learning. Actively seeking internship opportunities to contribute technical expertise while learning from industry professionals.\n\n",
+      "fatherName": "Srinivasan P",
+      "motherName": "Sivakami S",
+      "areasOfInterest": [
+        "dbms",
+        "os",
+        "web development"
+      ],
+      "hobbies": [
+        "Exploring new technologies",
+        "Participating in hackathons or coding contests"
+      ],
+      "id": 1,
+      "createdAt": "2025-06-20T11:53:02.118Z",
+      "updatedAt": "2025-06-20T16:00:57.887Z",
+      "profilePhotoUrl": "/uploads/profile-1-1750420394883.png",
+      "education": [
+        {
+          "id": "cvtxofl4c",
+          "degree": "B.Tech, Information Technology",
+          "institution": "M. Kumarasamy College of Engineering ",
+          "startYear": 2023,
+          "endYear": 2027,
+          "grade": "8.2/10"
+        }
+      ],
+      "experience": [
+        {
+          "id": "1gdb49py2",
+          "title": "Campus Ambassador",
+          "company": "Careers360",
+          "startDate": "2025-01-08",
+          "endDate": "2025-03-08",
+          "description": "Promoted Careers360 among students through targeted outreach, conceptualized and designed a marketing poster to enhance\nplatform visibility, and curated over 100 authentic student reviews to help peers make informed college decisions. Represented my\ncollege with strong leadership, communication, and community engagement skills throughout the two-month remote Campus\nAmbassador Internship (Jan–Mar).",
+          "current": false
+        }
+      ],
+      "projects": [
+        {
+          "id": "niznj1kq8",
+          "name": " Tour Package Management System",
+          "description": "Developed a dynamic and user-friendly Tour Package Management System that enables users to browse, book, and manage tour packages with ease. The system includes both front-end and back-end functionalities integrated with a MySQL database.",
+          "link": "",
+          "technologies": [
+            "HTML",
+            "CSS",
+            "JavaScript",
+            "PHP",
+            "MySQL"
+          ]
+        }
+      ],
+      "technicalSkills": [
+        {
+          "id": "4jntqwfxx",
+          "name": "C",
+          "level": "beginner"
+        }
+      ],
+      "softSkills": [
+        {
+          "id": "l8tpkvvvj",
+          "name": "Communication",
+          "level": "beginner"
+        }
+      ],
+      "awards": [
+        {
+          "id": "0mrf8nux4",
+          "name": "Start the Music",
+          "year": 2024,
+          "description": "Secured 1st Prize in the \"Start the Music\" event at the National Level Symposium organized by J.J. College of Engineering, Trichy."
+        }
+      ],
+      "certifications": [
+        {
+          "id": "ckje7jpnp",
+          "name": "Introduction To Industry 4.0 And Industrial Internet Of Things",
+          "year": 2024,
+          "issuer": "NPTEL,Indian Institute of Technology Kharagpur"
+        }
+      ],
+      "volunteerWork": [
+        {
+          "id": "s3aao22cu",
+          "organization": "careers 360",
+          "role": "event organizer",
+          "description": "Volunteered as an Event Organizer for a webinar focused on guiding students through the college counseling process. I was responsible for coordinating event logistics, managing participant registrations, promoting the session through digital platforms, and ensuring smooth technical execution during the live session. I collaborated with speakers, handled audience interaction and Q&A, and assisted in distributing post-event materials. This initiative helped students make informed decisions about college selection and course preferences during the counseling phase.\n\n",
+          "startDate": "2025-05-22",
+          "endDate": "2025-06-23"
+        }
+      ],
+      "place": "Karur",
+      "languages": []
+    }
+  ]
+}
