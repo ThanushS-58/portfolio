@@ -11,6 +11,7 @@ import { Loader2, Download, Eye, FileText, Sparkles, CheckCircle, AlertCircle, U
 import { useToast } from "@/hooks/use-toast";
 import type { Profile } from "@shared/schema";
 import { Document, Packer, Paragraph, TextRun, AlignmentType, HeadingLevel, BorderStyle, WidthType, TabStopType, TabStopPosition } from "docx";
+import { dynamicSkillsGenerator } from "@/lib/dynamicSkillsGenerator";
 
 interface ResumeData {
   targetCompany: string;
@@ -329,22 +330,32 @@ CGPA: 8.5`;
         const relevantSkills = getRelevantSkills();
         const skillsText = relevantSkills.length > 0 ? relevantSkills.join(', ') : 'cutting-edge technologies';
         
-        // Generate unique objectives based on different approaches
+        // Generate dynamic career objective using current industry trends
+        let dynamicObjective = '';
+        try {
+          dynamicObjective = dynamicSkillsGenerator.generateDynamicObjective(profile, jobTitle, jobDescription);
+        } catch (error) {
+          console.error('Error generating dynamic objective:', error);
+          // Fallback to enhanced objective with current skills
+          dynamicObjective = `Dedicated ${jobTitle} seeking to leverage expertise in ${skillsText} and emerging technologies to drive innovation at ${targetCompany}. Committed to delivering high-impact solutions through continuous learning and technical excellence.`;
+        }
+        
+        // Generate unique objectives based on different approaches including the dynamic one
         const objectiveVariations = [
+          // Dynamic AI-generated objective (primary)
+          dynamicObjective,
+          
           // Innovation focused
-          `Motivated ${jobTitle} seeking to drive innovation at ${targetCompany} through expertise in ${skillsText}. Committed to developing scalable solutions that deliver measurable business impact.`,
+          `Motivated ${jobTitle} seeking to drive innovation at ${targetCompany} through expertise in ${skillsText} and cutting-edge technologies like AI collaboration, cloud computing, and data-driven development. Committed to developing scalable solutions that deliver measurable business impact.`,
           
-          // Results focused
-          `Results-oriented professional pursuing ${jobTitle} opportunities at ${targetCompany} to leverage ${skillsText} proficiency. Dedicated to creating efficient solutions through collaborative development and continuous improvement.`,
+          // Results focused with trending skills
+          `Results-oriented professional pursuing ${jobTitle} opportunities at ${targetCompany} to leverage ${skillsText} proficiency alongside emerging technologies including machine learning, DevSecOps, and real-time analytics. Dedicated to creating efficient solutions through collaborative development and continuous improvement.`,
           
-          // Growth focused
-          `Ambitious ${jobTitle} candidate eager to contribute to ${targetCompany}'s technological advancement using ${skillsText} expertise. Passionate about learning emerging technologies and delivering high-quality software solutions.`,
+          // Growth focused with industry trends
+          `Ambitious ${jobTitle} candidate eager to contribute to ${targetCompany}'s technological advancement using ${skillsText} expertise while embracing next-generation technologies like edge computing, quantum computing applications, and advanced AI systems. Passionate about learning emerging technologies and delivering high-quality software solutions.`,
           
-          // Problem-solving focused
-          `Detail-oriented ${jobTitle} aspiring to solve complex challenges at ${targetCompany} through ${skillsText} mastery. Focused on building robust applications while maintaining code quality and performance standards.`,
-          
-          // Leadership focused
-          `Forward-thinking ${jobTitle} seeking to lead innovative projects at ${targetCompany} utilizing ${skillsText} knowledge. Committed to mentoring teams and driving technical excellence in fast-paced environments.`
+          // Problem-solving focused with modern skills
+          `Detail-oriented ${jobTitle} aspiring to solve complex challenges at ${targetCompany} through ${skillsText} mastery and modern development practices including zero-trust security, infrastructure as code, and intelligent automation. Focused on building robust applications while maintaining code quality and performance standards.`
         ];
         
         // Select variation based on context

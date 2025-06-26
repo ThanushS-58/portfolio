@@ -10,6 +10,8 @@ export interface Profile {
   dateOfBirth?: string;
   linkedinUrl?: string;
   githubUrl?: string;
+  leetcodeUrl?: string;
+  hackerrankUrl?: string;
   address?: string;
   profilePhotoUrl?: string;
   careerObjective?: string;
