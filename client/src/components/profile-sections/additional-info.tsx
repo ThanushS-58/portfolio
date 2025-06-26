@@ -169,7 +169,7 @@ export default function AdditionalInfo({ data, onChange }: AdditionalInfoProps) 
                     const inputText = e.target.value;
                     // Store as string first, then convert to array on blur
                     onChange({ 
-                      extracurricularActivities: inputText
+                      extracurricularActivities: inputText as any
                     });
                   }}
                   onBlur={(e) => {

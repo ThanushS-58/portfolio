@@ -365,11 +365,17 @@ export default function PersonalInfo({ data, onChange }: PersonalInfoProps) {
                   className="input-field"
                   rows={2}
                   placeholder="List 3 subjects you are well versed in (comma separated)"
-                  value={Array.isArray(data.areasOfInterest) ? data.areasOfInterest.join(', ') : ""}
+                  value={Array.isArray(data.areasOfInterest) ? data.areasOfInterest.join(', ') : data.areasOfInterest || ""}
                   onChange={(e) => {
                     const value = e.target.value;
-                    const interests = value.split(',').map(item => item.trim()).filter(Boolean);
-                    onChange({ areasOfInterest: interests });
+                    onChange({ areasOfInterest: value as any });
+                  }}
+                  onBlur={(e) => {
+                    const value = e.target.value;
+                    if (value.trim()) {
+                      const interests = value.split(',').map(item => item.trim()).filter(Boolean);
+                      onChange({ areasOfInterest: interests });
+                    }
                   }}
                 />
               </div>
@@ -383,11 +389,17 @@ export default function PersonalInfo({ data, onChange }: PersonalInfoProps) {
                   className="input-field"
                   rows={2}
                   placeholder="Your hobbies and interests (comma separated)"
-                  value={Array.isArray(data.hobbies) ? data.hobbies.join(', ') : ""}
+                  value={Array.isArray(data.hobbies) ? data.hobbies.join(', ') : data.hobbies || ""}
                   onChange={(e) => {
                     const value = e.target.value;
-                    const hobbies = value.split(',').map(item => item.trim()).filter(Boolean);
-                    onChange({ hobbies: hobbies });
+                    onChange({ hobbies: value as any });
+                  }}
+                  onBlur={(e) => {
+                    const value = e.target.value;
+                    if (value.trim()) {
+                      const hobbies = value.split(',').map(item => item.trim()).filter(Boolean);
+                      onChange({ hobbies: hobbies });
+                    }
                   }}
                 />
               </div>

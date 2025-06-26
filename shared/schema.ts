@@ -23,7 +23,7 @@ export interface Profile {
   place?: string; // Place for resume signature
   
   // Areas of Interest (new field for resume format)
-  areasOfInterest?: string[];
+  areasOfInterest?: string[] | string;
   
   // Job-specific fields for tailored resume generation
   targetJobTitle?: string;
@@ -44,10 +44,10 @@ export interface Profile {
   awards?: Award[];
   certifications?: Certification[];
   languages?: Language[];
-  hobbies?: string[];
+  hobbies?: string[] | string;
   publications?: Publication[];
   volunteerWork?: VolunteerWork[];
-  extracurricularActivities?: string[];
+  extracurricularActivities?: string[] | string;
   
   createdAt?: string;
   updatedAt?: string;

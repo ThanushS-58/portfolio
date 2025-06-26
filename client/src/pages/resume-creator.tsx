@@ -420,18 +420,22 @@ ${grade}`;
         const interests = profile?.areasOfInterest;
         const jobDescription = resumeData.jobDescription || '';
         
-        if (interests && interests.length > 0) {
+        // Convert interests to array if it's a string
+        const interestsArray = Array.isArray(interests) ? interests : 
+          (typeof interests === 'string' ? interests.split(',').map(s => s.trim()).filter(Boolean) : []);
+        
+        if (interestsArray && interestsArray.length > 0) {
           // Filter interests relevant to job if job description provided
           if (jobDescription) {
             const jobKeywords = jobDescription.toLowerCase();
-            const relevantInterests = interests.filter(interest => 
+            const relevantInterests = interestsArray.filter((interest: string) => 
               jobKeywords.includes(interest.toLowerCase()) ||
               interest.toLowerCase().includes('development') ||
               interest.toLowerCase().includes('technology')
             );
-            return relevantInterests.length > 0 ? relevantInterests.join(', ') : interests.slice(0, 3).join(', ');
+            return relevantInterests.length > 0 ? relevantInterests.join(', ') : interestsArray.slice(0, 3).join(', ');
           }
-          return interests.slice(0, 3).join(', ');
+          return interestsArray.slice(0, 3).join(', ');
         }
         
         // Generate default interests based on job description
@@ -674,9 +678,13 @@ Description: ${project.description}`).join('\n\n');
       // Format co-curricular activities
       const formatActivities = () => {
         const activities = profile?.extracurricularActivities || [];
-        if (activities.length === 0) return '';
+        // Convert to array if it's a string
+        const activitiesArray = Array.isArray(activities) ? activities : 
+          (typeof activities === 'string' ? activities.split(',').map(s => s.trim()).filter(Boolean) : []);
         
-        return activities.map(activity => `•    ${activity}`).join('\n');
+        if (activitiesArray.length === 0) return '';
+        
+        return activitiesArray.map((activity: string) => `•    ${activity}`).join('\n');
       };
 
       // Format volunteer experience with justified descriptions
@@ -790,7 +798,7 @@ ${volunteerContent}`;
       resume += `\n\nPersonal Details:
 ${profile?.fatherName ? `Father's name: ${profile.fatherName}` : "Father's name:"}
 ${profile?.motherName ? `Mother's name: ${profile.motherName}` : "Mother's name:"}
-${profile?.hobbies && profile.hobbies.length > 0 ? `Hobbies: ${profile.hobbies.join(', ')}` : "Hobbies:"}
+${profile?.hobbies ? `Hobbies: ${Array.isArray(profile.hobbies) ? (profile.hobbies as string[]).join(', ') : profile.hobbies}` : "Hobbies:"}
 ${profile?.address || "Address:"}
 
 Date: ${currentDate}
