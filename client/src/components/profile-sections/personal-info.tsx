@@ -50,8 +50,6 @@ export default function PersonalInfo({ data, onChange }: PersonalInfoProps) {
         break;
       case "linkedinUrl":
       case "githubUrl":
-      case "leetcodeUrl":
-      case "hackerrankUrl":
         if (value && !value.startsWith("http")) {
           newErrors[field] = "Please enter a valid URL";
         } else {
@@ -290,41 +288,7 @@ export default function PersonalInfo({ data, onChange }: PersonalInfoProps) {
                   />
                 </div>
 
-                <div>
-                  <Label htmlFor="leetcodeUrl" className="block text-sm font-semibold text-slate-700 mb-2">
-                    LeetCode URL
-                  </Label>
-                  <Input
-                    id="leetcodeUrl"
-                    type="url"
-                    className={`input-field ${errors.leetcodeUrl ? 'border-destructive' : ''}`}
-                    placeholder="https://leetcode.com/username"
-                    value={data.leetcodeUrl || ""}
-                    onChange={(e) => handleInputChange("leetcodeUrl", e.target.value)}
-                    onBlur={(e) => validateField("leetcodeUrl", e.target.value)}
-                  />
-                  {errors.leetcodeUrl && (
-                    <p className="text-destructive text-sm mt-1">{errors.leetcodeUrl}</p>
-                  )}
-                </div>
 
-                <div>
-                  <Label htmlFor="hackerrankUrl" className="block text-sm font-semibold text-slate-700 mb-2">
-                    HackerRank URL
-                  </Label>
-                  <Input
-                    id="hackerrankUrl"
-                    type="url"
-                    className={`input-field ${errors.hackerrankUrl ? 'border-destructive' : ''}`}
-                    placeholder="https://www.hackerrank.com/username"
-                    value={data.hackerrankUrl || ""}
-                    onChange={(e) => handleInputChange("hackerrankUrl", e.target.value)}
-                    onBlur={(e) => validateField("hackerrankUrl", e.target.value)}
-                  />
-                  {errors.hackerrankUrl && (
-                    <p className="text-destructive text-sm mt-1">{errors.hackerrankUrl}</p>
-                  )}
-                </div>
               </div>
 
               <div className="mt-6">

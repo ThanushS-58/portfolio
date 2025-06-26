@@ -17,6 +17,8 @@ import Skills from "@/components/profile-sections/skills";
 import Awards from "@/components/profile-sections/awards";
 import Certifications from "@/components/profile-sections/certifications";
 import AdditionalInfo from "@/components/profile-sections/additional-info";
+import CocurricularActivities from "@/components/profile-sections/cocurricular-activities";
+import CodingProfiles from "@/components/profile-sections/coding-profiles";
 
 import type { Profile, InsertProfile, UpdateProfile } from "@shared/schema";
 
@@ -291,6 +293,12 @@ export default function ProfileForm({ activeSection }: ProfileFormProps) {
               data={currentProfile} 
               onChange={(data) => handleDataChange("additional", data)}
             />
+          )}
+          {activeSection === "cocurricular" && currentProfile?.id && (
+            <CocurricularActivities profileId={currentProfile.id} />
+          )}
+          {activeSection === "coding" && currentProfile?.id && (
+            <CodingProfiles profileId={currentProfile.id} />
           )}
         </motion.div>
       </AnimatePresence>

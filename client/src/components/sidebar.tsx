@@ -12,7 +12,9 @@ import {
   ChevronRight,
   Save,
   FileText,
-  Search
+  Search,
+  Users,
+  Terminal
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { scrollToSection } from "@/lib/utils";
@@ -33,7 +35,9 @@ const navigationItems = [
   { id: "skills", label: "Skills", icon: Settings, color: "text-amber-600" },
   { id: "awards", label: "Awards", icon: Trophy, color: "text-yellow-600" },
   { id: "certifications", label: "Certifications", icon: Award, color: "text-teal-600" },
-  { id: "additional", label: "Additional Info", icon: PlusCircle, color: "text-rose-600" },
+  { id: "cocurricular", label: "Co-Curricular", icon: Users, color: "text-rose-600" },
+  { id: "coding", label: "Coding Profiles", icon: Terminal, color: "text-green-600" },
+  { id: "additional", label: "Additional Info", icon: PlusCircle, color: "text-slate-600" },
 ];
 
 const toolItems = [

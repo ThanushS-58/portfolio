@@ -162,5 +162,99 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   const httpServer = createServer(app);
+  // Import the storage modules
+  const { cocurricularStorage } = await import('./cocurricular-storage.js');
+  const { codingProfileStorage } = await import('./coding-profiles-storage.js');
+
+  // Co-curricular Activities routes
+  app.get('/api/profiles/:id/cocurricular', async (req, res) => {
+    try {
+      const profileId = parseInt(req.params.id);
+      const activities = await cocurricularStorage.getActivitiesByProfileId(profileId);
+      res.json(activities);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch activities' });
+    }
+  });
+
+  app.post('/api/profiles/:id/cocurricular', async (req, res) => {
+    try {
+      const profileId = parseInt(req.params.id);
+      const activity = await cocurricularStorage.createActivity(profileId, req.body);
+      res.json(activity);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to create activity' });
+    }
+  });
+
+  app.put('/api/profiles/:id/cocurricular/:activityId', async (req, res) => {
+    try {
+      const activity = await cocurricularStorage.updateActivity(req.params.activityId, req.body);
+      if (!activity) {
+        return res.status(404).json({ error: 'Activity not found' });
+      }
+      res.json(activity);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to update activity' });
+    }
+  });
+
+  app.delete('/api/profiles/:id/cocurricular/:activityId', async (req, res) => {
+    try {
+      const deleted = await cocurricularStorage.deleteActivity(req.params.activityId);
+      if (!deleted) {
+        return res.status(404).json({ error: 'Activity not found' });
+      }
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to delete activity' });
+    }
+  });
+
+  // Coding Profiles routes
+  app.get('/api/profiles/:id/coding-profiles', async (req, res) => {
+    try {
+      const profileId = parseInt(req.params.id);
+      const profiles = await codingProfileStorage.getProfilesByUserId(profileId);
+      res.json(profiles);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch coding profiles' });
+    }
+  });
+
+  app.post('/api/profiles/:id/coding-profiles', async (req, res) => {
+    try {
+      const profileId = parseInt(req.params.id);
+      const profile = await codingProfileStorage.createCodingProfile(profileId, req.body);
+      res.json(profile);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to create coding profile' });
+    }
+  });
+
+  app.put('/api/profiles/:id/coding-profiles/:profileId', async (req, res) => {
+    try {
+      const profile = await codingProfileStorage.updateCodingProfile(req.params.profileId, req.body);
+      if (!profile) {
+        return res.status(404).json({ error: 'Coding profile not found' });
+      }
+      res.json(profile);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to update coding profile' });
+    }
+  });
+
+  app.delete('/api/profiles/:id/coding-profiles/:profileId', async (req, res) => {
+    try {
+      const deleted = await codingProfileStorage.deleteCodingProfile(req.params.profileId);
+      if (!deleted) {
+        return res.status(404).json({ error: 'Coding profile not found' });
+      }
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to delete coding profile' });
+    }
+  });
+
   return httpServer;
 }

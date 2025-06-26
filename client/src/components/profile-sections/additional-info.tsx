@@ -149,46 +149,6 @@ export default function AdditionalInfo({ data, onChange }: AdditionalInfoProps) 
           </div>
 
           <div className="space-y-8">
-            {/* Co-curricular Activities Section */}
-            <div className="space-y-4">
-              <div className="flex items-center mb-4">
-                <Users className="text-rose-600 mr-2" size={20} />
-                <h3 className="text-lg font-semibold text-slate-800">Co-Curricular Activities</h3>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="activities" className="text-sm font-medium text-slate-700">
-                  Activities (comma separated)
-                </Label>
-                <Textarea
-                  id="activities"
-                  placeholder="Basketball team captain, Debate club member, Science fair organizer"
-                  rows={4}
-                  className="input-field resize-none"
-                  value={Array.isArray(data.extracurricularActivities) ? data.extracurricularActivities.join(', ') : data.extracurricularActivities || ''}
-                  onChange={(e) => {
-                    const inputText = e.target.value;
-                    // Store as string first, then convert to array on blur
-                    onChange({ 
-                      extracurricularActivities: inputText as any
-                    });
-                  }}
-                  onBlur={(e) => {
-                    const inputText = e.target.value;
-                    if (inputText.trim()) {
-                      // Convert to array when user finishes typing
-                      const activitiesArray = inputText.split(',').map(item => item.trim()).filter(item => item.length > 0);
-                      onChange({ 
-                        extracurricularActivities: activitiesArray
-                      });
-                    }
-                  }}
-                />
-                <p className="text-xs text-slate-500">
-                  Enter your co-curricular activities separated by commas
-                </p>
-              </div>
-            </div>
-
             {/* Languages Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div>

@@ -1,4 +1,8 @@
 import { z } from "zod";
+import { createInsertSchema } from "drizzle-zod";
+import { pgTable, serial, integer, text, boolean } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 
 // Profile interface for LowDB
 export interface Profile {
@@ -10,8 +14,6 @@ export interface Profile {
   dateOfBirth?: string;
   linkedinUrl?: string;
   githubUrl?: string;
-  leetcodeUrl?: string;
-  hackerrankUrl?: string;
   address?: string;
   profilePhotoUrl?: string;
   careerObjective?: string;
@@ -47,7 +49,6 @@ export interface Profile {
   hobbies?: string[] | string;
   publications?: Publication[];
   volunteerWork?: VolunteerWork[];
-  extracurricularActivities?: string[] | string;
   
   createdAt?: string;
   updatedAt?: string;
@@ -224,3 +225,26 @@ export const updateProfileSchema = insertProfileSchema.partial();
 
 export type InsertProfile = z.infer<typeof insertProfileSchema>;
 export type UpdateProfile = z.infer<typeof updateProfileSchema>;
+
+// Separate interfaces for Co-curricular Activities and Coding Profiles
+export interface CocurricularActivity {
+  id: string;
+  activity: string;
+  role?: string;
+  description?: string;
+  startDate?: string;
+  endDate?: string;
+  achievements?: string;
+}
+
+export interface CodingProfile {
+  id: string;
+  platform: string; // 'leetcode', 'hackerrank', 'codechef', 'codeforces', etc.
+  username: string;
+  profileUrl?: string;
+  ranking?: number;
+  problemsSolved?: number;
+  contestRating?: number;
+  achievements?: string;
+  badges?: string[];
+}
