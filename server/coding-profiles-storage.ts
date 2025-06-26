@@ -18,46 +18,50 @@ export async function initCodingProfilesDb() {
 
 export class CodingProfileStorage {
   async getProfilesByUserId(profileId: number): Promise<CodingProfile[]> {
-    await codingProfilesDb.read();
-    return codingProfilesDb.data.profiles.filter(profile => 
+    const db = await initCodingProfilesDb();
+    await db.read();
+    return db.data.profiles.filter((profile: CodingProfile) => 
       profile.id.startsWith(`${profileId}-`)
     );
   }
 
   async createCodingProfile(profileId: number, codingProfile: Omit<CodingProfile, 'id'>): Promise<CodingProfile> {
-    await codingProfilesDb.read();
+    const db = await initCodingProfilesDb();
+    await db.read();
     
     const newProfile: CodingProfile = {
       ...codingProfile,
       id: `${profileId}-${codingProfile.platform}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
     };
     
-    codingProfilesDb.data.profiles.push(newProfile);
-    await codingProfilesDb.write();
+    db.data.profiles.push(newProfile);
+    await db.write();
     
     return newProfile;
   }
 
   async updateCodingProfile(id: string, updates: Partial<CodingProfile>): Promise<CodingProfile | null> {
-    await codingProfilesDb.read();
+    const db = await initCodingProfilesDb();
+    await db.read();
     
-    const index = codingProfilesDb.data.profiles.findIndex(profile => profile.id === id);
+    const index = db.data.profiles.findIndex((profile: CodingProfile) => profile.id === id);
     if (index === -1) return null;
     
-    codingProfilesDb.data.profiles[index] = { ...codingProfilesDb.data.profiles[index], ...updates };
-    await codingProfilesDb.write();
+    db.data.profiles[index] = { ...db.data.profiles[index], ...updates };
+    await db.write();
     
-    return codingProfilesDb.data.profiles[index];
+    return db.data.profiles[index];
   }
 
   async deleteCodingProfile(id: string): Promise<boolean> {
-    await codingProfilesDb.read();
+    const db = await initCodingProfilesDb();
+    await db.read();
     
-    const initialLength = codingProfilesDb.data.profiles.length;
-    codingProfilesDb.data.profiles = codingProfilesDb.data.profiles.filter(profile => profile.id !== id);
+    const initialLength = db.data.profiles.length;
+    db.data.profiles = db.data.profiles.filter((profile: CodingProfile) => profile.id !== id);
     
-    if (codingProfilesDb.data.profiles.length < initialLength) {
-      await codingProfilesDb.write();
+    if (db.data.profiles.length < initialLength) {
+      await db.write();
       return true;
     }
     
@@ -65,13 +69,15 @@ export class CodingProfileStorage {
   }
 
   async getAllCodingProfiles(): Promise<CodingProfile[]> {
-    await codingProfilesDb.read();
-    return codingProfilesDb.data.profiles;
+    const db = await initCodingProfilesDb();
+    await db.read();
+    return db.data.profiles;
   }
 
   async getCodingProfilesByPlatform(profileId: number, platform: string): Promise<CodingProfile[]> {
-    await codingProfilesDb.read();
-    return codingProfilesDb.data.profiles.filter(profile => 
+    const db = await initCodingProfilesDb();
+    await db.read();
+    return db.data.profiles.filter((profile: CodingProfile) => 
       profile.id.startsWith(`${profileId}-`) && profile.platform === platform
     );
   }

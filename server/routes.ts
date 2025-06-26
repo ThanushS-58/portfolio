@@ -3,6 +3,8 @@ import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertProfileSchema, updateProfileSchema } from "@shared/schema";
+import { cocurricularStorage } from "./cocurricular-storage";
+import { codingProfileStorage } from "./coding-profiles-storage";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
@@ -162,9 +164,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   const httpServer = createServer(app);
-  // Import the storage modules
-  const { cocurricularStorage } = await import('./cocurricular-storage.js');
-  const { codingProfileStorage } = await import('./coding-profiles-storage.js');
 
   // Co-curricular Activities routes
   app.get('/api/profiles/:id/cocurricular', async (req, res) => {
@@ -180,10 +179,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/profiles/:id/cocurricular', async (req, res) => {
     try {
       const profileId = parseInt(req.params.id);
+      console.log('Creating activity for profileId:', profileId, 'data:', req.body);
       const activity = await cocurricularStorage.createActivity(profileId, req.body);
       res.json(activity);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to create activity' });
+      console.error('Error creating activity:', error);
+      res.status(500).json({ error: 'Failed to create activity', details: error.message });
     }
   });
 
