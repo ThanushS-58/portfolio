@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Admin - Edit Your Information</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .admin-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .admin-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+        .admin-nav {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .nav-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--primary-color);
+            background: white;
+            color: var(--primary-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        .form-section {
+            display: none;
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        .form-section.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-right: 1rem;
+        }
+        .btn-primary:hover {
+            background: var(--secondary-color);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-color);
+            padding: 0.75rem 2rem;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        .success-message {
+            background: var(--success);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        .error-message {
+            background: var(--error);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        .item-list {
+            margin-bottom: 2rem;
+        }
+        .item-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-edit {
+            background: var(--accent-color);
+            color: white;
+        }
+        .btn-delete {
+            background: var(--error);
+            color: white;
+        }
+        .array-input {
+            margin-bottom: 0.5rem;
+        }
+        .add-item-btn {
+            background: var(--success);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 768px) {
+            .admin-container {
+                margin: 1rem;
+                padding: 1rem;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .admin-nav {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1><i class="fas fa-edit"></i> Portfolio Admin Panel</h1>
+            <p>Edit your portfolio information easily through this interface</p>
+            <a href="/" class="btn-secondary">← Back to Portfolio</a>
+        </div>
+
+        <div class="success-message" id="successMessage"></div>
+        <div class="error-message" id="errorMessage"></div>
+
+        <div class="admin-nav">
+            <button class="nav-btn active" onclick="showSection('profile')">
+                <i class="fas fa-user"></i> Profile
+            </button>
+            <button class="nav-btn" onclick="showSection('education')">
+                <i class="fas fa-graduation-cap"></i> Education
+            </button>
+            <button class="nav-btn" onclick="showSection('experience')">
+                <i class="fas fa-briefcase"></i> Experience
+            </button>
+            <button class="nav-btn" onclick="showSection('projects')">
+                <i class="fas fa-code"></i> Projects
+            </button>
+            <button class="nav-btn" onclick="showSection('skills')">
+                <i class="fas fa-tools"></i> Skills
+            </button>
+            <button class="nav-btn" onclick="showSection('awards')">
+                <i class="fas fa-trophy"></i> Awards
+            </button>
+        </div>
+
+        <!-- Profile Section -->
+        <div id="profile-section" class="form-section active">
+            <h2><i class="fas fa-user"></i> Personal Information</h2>
+            <form id="profileForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Professional Title</label>
+                        <input type="text" id="title" name="title" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="text" id="phone" name="phone">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" name="location">
+                    </div>
+                    <div class="form-group">
+                        <label for="birthDate">Birth Date</label>
+                        <input type="text" id="birthDate" name="birthDate">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="profileImageUrl">Profile Image URL</label>
+                    <input type="url" id="profileImageUrl" name="profileImageUrl" placeholder="https://example.com/your-photo.jpg">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="linkedinUrl">LinkedIn URL</label>
+                        <input type="url" id="linkedinUrl" name="linkedinUrl">
+                    </div>
+                    <div class="form-group">
+                        <label for="githubUrl">GitHub URL</label>
+                        <input type="url" id="githubUrl" name="githubUrl">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="careerObjective">Career Objective</label>
+                    <textarea id="careerObjective" name="careerObjective" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="professionalSummary">Professional Summary</label>
+                    <textarea id="professionalSummary" name="professionalSummary" rows="6"></textarea>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-save"></i> Save Profile
+                </button>
+            </form>
+        </div>
+
+        <!-- Education Section -->
+        <div id="education-section" class="form-section">
+            <h2><i class="fas fa-graduation-cap"></i> Education</h2>
+            <div id="educationList" class="item-list"></div>
+            <form id="educationForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="degree">Degree</label>
+                        <input type="text" id="degree" name="degree" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="institution">Institution</label>
+                        <input type="text" id="institution" name="institution" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="duration">Duration</label>
+                        <input type="text" id="duration" name="duration" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="grade">Grade/CGPA</label>
+                        <input type="text" id="grade" name="grade">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-plus"></i> Add Education
+                </button>
+            </form>
+        </div>
+
+        <!-- Experience Section -->
+        <div id="experience-section" class="form-section">
+            <h2><i class="fas fa-briefcase"></i> Experience</h2>
+            <div id="experienceList" class="item-list"></div>
+            <form id="experienceForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="expTitle">Job Title</label>
+                        <input type="text" id="expTitle" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="company">Company</label>
+                        <input type="text" id="company" name="company" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="expDuration">Duration</label>
+                        <input type="text" id="expDuration" name="duration" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="type">Type</label>
+                        <select id="type" name="type">
+                            <option value="work">Work</option>
+                            <option value="volunteer">Volunteer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="expDescription">Description</label>
+                    <textarea id="expDescription" name="description" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Skills (one per line)</label>
+                    <textarea id="expSkills" name="skills" rows="3" placeholder="Leadership&#10;Communication&#10;Project Management"></textarea>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-plus"></i> Add Experience
+                </button>
+            </form>
+        </div>
+
+        <!-- Projects Section -->
+        <div id="projects-section" class="form-section">
+            <h2><i class="fas fa-code"></i> Projects</h2>
+            <div id="projectsList" class="item-list"></div>
+            <form id="projectsForm">
+                <div class="form-group">
+                    <label for="projectTitle">Project Title</label>
+                    <input type="text" id="projectTitle" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="projectDescription">Description</label>
+                    <textarea id="projectDescription" name="description" rows="4"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="projectUrl">Project URL</label>
+                        <input type="url" id="projectUrl" name="projectUrl">
+                    </div>
+                    <div class="form-group">
+                        <label for="projectGithubUrl">GitHub URL</label>
+                        <input type="url" id="projectGithubUrl" name="githubUrl">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Technologies (one per line)</label>
+                    <textarea id="technologies" name="technologies" rows="3" placeholder="React&#10;Node.js&#10;MongoDB"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Key Features (one per line)</label>
+                    <textarea id="features" name="features" rows="3" placeholder="User authentication&#10;Real-time updates&#10;Responsive design"></textarea>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-plus"></i> Add Project
+                </button>
+            </form>
+        </div>
+
+        <!-- Skills Section -->
+        <div id="skills-section" class="form-section">
+            <h2><i class="fas fa-tools"></i> Skills</h2>
+            <div id="skillsList" class="item-list"></div>
+            <form id="skillsForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="skillName">Skill Name</label>
+                        <input type="text" id="skillName" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="skillLevel">Level</label>
+                        <select id="skillLevel" name="level">
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                            <option value="Expert">Expert</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="skillCategory">Category</label>
+                        <select id="skillCategory" name="category">
+                            <option value="technical">Technical</option>
+                            <option value="soft">Soft Skills</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="percentage">Proficiency %</label>
+                        <input type="number" id="percentage" name="percentage" min="0" max="100">
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-plus"></i> Add Skill
+                </button>
+            </form>
+        </div>
+
+        <!-- Awards Section -->
+        <div id="awards-section" class="form-section">
+            <h2><i class="fas fa-trophy"></i> Awards & Certifications</h2>
+            <div id="awardsList" class="item-list"></div>
+            <form id="awardsForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="awardTitle">Title</label>
+                        <input type="text" id="awardTitle" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="awardYear">Year</label>
+                        <input type="text" id="awardYear" name="year" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="awardType">Type</label>
+                        <select id="awardType" name="type">
+                            <option value="award">Award</option>
+                            <option value="certification">Certification</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventOrIssuer">Event/Issuer</label>
+                        <input type="text" id="eventOrIssuer" name="event">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="awardDescription">Description</label>
+                    <textarea id="awardDescription" name="description" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-plus"></i> Add Award/Certification
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
