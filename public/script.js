@@ -43,6 +43,171 @@ window.addEventListener('scroll', () => {
     }
 });
 
+// Load portfolio data from API
+async function loadPortfolioData() {
+    try {
+        const response = await fetch('/api/portfolio-data');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        
+        // Update profile data
+        if (data.profile) {
+            updateProfileData(data.profile);
+        }
+        
+        // Update sections with data
+        if (data.education) updateEducationSection(data.education);
+        if (data.experience) updateExperienceSection(data.experience);
+        if (data.projects) updateProjectsSection(data.projects);
+        if (data.skills) updateSkillsSection(data.skills);
+        if (data.awards) updateAwardsSection(data.awards);
+        
+    } catch (error) {
+        console.log('Using static content - API not available');
+        // Fallback to static content already in HTML
+    }
+}
+
+function updateProfileData(profile) {
+    // Update hero section if profile data exists
+    if (profile.name) {
+        const heroTitle = document.querySelector('.hero-title');
+        if (heroTitle) {
+            heroTitle.innerHTML = `Hi, I'm <span class="gradient-text">${profile.name}</span>`;
+        }
+    }
+    
+    if (profile.title) {
+        const heroSubtitle = document.querySelector('.hero-subtitle');
+        if (heroSubtitle) {
+            heroSubtitle.textContent = profile.title;
+        }
+    }
+    
+    if (profile.professional_summary) {
+        const heroDescription = document.querySelector('.hero-description');
+        if (heroDescription) {
+            heroDescription.textContent = profile.professional_summary;
+        }
+    }
+}
+
+function updateEducationSection(education) {
+    const container = document.querySelector('.education-grid');
+    if (!container || education.length === 0) return;
+    
+    container.innerHTML = education.map(edu => `
+        <div class="education-card animate-on-scroll">
+            <div class="education-details">
+                <h3>${edu.degree}</h3>
+                <span class="duration">${edu.duration}</span>
+            </div>
+            <h4>${edu.institution}</h4>
+            ${edu.grade ? `<p class="grade">Grade: ${edu.grade}</p>` : ''}
+            ${edu.description ? `<p>${edu.description}</p>` : ''}
+        </div>
+    `).join('');
+}
+
+function updateExperienceSection(experience) {
+    const container = document.querySelector('.experience-grid');
+    if (!container || experience.length === 0) return;
+    
+    container.innerHTML = experience.map(exp => `
+        <div class="experience-card animate-on-scroll">
+            <div class="experience-header">
+                <h3>${exp.title}</h3>
+                <h4>${exp.company}</h4>
+                <span class="duration">${exp.duration}</span>
+            </div>
+            <p>${exp.description}</p>
+            ${exp.skills ? `
+                <div class="experience-skills">
+                    ${exp.skills.split(',').map(skill => `<span class="skill-tag">${skill.trim()}</span>`).join('')}
+                </div>
+            ` : ''}
+        </div>
+    `).join('');
+}
+
+function updateProjectsSection(projects) {
+    const container = document.querySelector('.projects-grid');
+    if (!container || projects.length === 0) return;
+    
+    container.innerHTML = projects.map(project => `
+        <div class="project-card animate-on-scroll">
+            <div class="project-header">
+                <h3>${project.title}</h3>
+                ${project.github_url ? `<a href="${project.github_url}" target="_blank" class="project-link"><i class="fab fa-github"></i></a>` : ''}
+            </div>
+            <div class="project-content">
+                <p>${project.description}</p>
+                ${project.technologies ? `
+                    <div class="project-tech">
+                        ${project.technologies.split(',').map(tech => `<span class="tech-tag">${tech.trim()}</span>`).join('')}
+                    </div>
+                ` : ''}
+                ${project.features ? `
+                    <div class="project-features">
+                        <h4>Key Features:</h4>
+                        <ul>
+                            ${project.features.split(',').map(feature => `<li>${feature.trim()}</li>`).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
+            </div>
+        </div>
+    `).join('');
+}
+
+function updateSkillsSection(skills) {
+    const container = document.querySelector('.skills-grid');
+    if (!container || skills.length === 0) return;
+    
+    // Group skills by category
+    const skillsByCategory = skills.reduce((acc, skill) => {
+        const category = skill.category || 'Other';
+        if (!acc[category]) acc[category] = [];
+        acc[category].push(skill);
+        return acc;
+    }, {});
+    
+    container.innerHTML = Object.entries(skillsByCategory).map(([category, categorySkills]) => `
+        <div class="skill-category">
+            <h3>${category}</h3>
+            <div class="skills-list">
+                ${categorySkills.map(skill => `
+                    <div class="skill-item animate-on-scroll">
+                        <div class="skill-info">
+                            <span class="skill-name">${skill.name}</span>
+                            <span class="skill-level">${skill.level}</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: ${skill.percentage || 0}%"></div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `).join('');
+}
+
+function updateAwardsSection(awards) {
+    const container = document.querySelector('.awards-grid');
+    if (!container || awards.length === 0) return;
+    
+    container.innerHTML = awards.map(award => `
+        <div class="award-item animate-on-scroll">
+            <h3>${award.title}</h3>
+            <h4>${award.event}</h4>
+            <span class="award-year">${award.year}</span>
+            ${award.description ? `<p>${award.description}</p>` : ''}
+        </div>
+    `).join('');
+}
+
 // Animate elements on scroll
 const observerOptions = {
     threshold: 0.1,
@@ -59,11 +224,15 @@ const observer = new IntersectionObserver((entries) => {
 
 // Add animation class to elements
 document.addEventListener('DOMContentLoaded', () => {
-    const animateElements = document.querySelectorAll('.education-card, .experience-card, .volunteer-card, .project-card, .skill-item, .award-item, .certification-item');
-    
-    animateElements.forEach(el => {
-        el.classList.add('animate-on-scroll');
-        observer.observe(el);
+    // Load portfolio data first
+    loadPortfolioData().then(() => {
+        // Then set up animations
+        const animateElements = document.querySelectorAll('.education-card, .experience-card, .volunteer-card, .project-card, .skill-item, .award-item, .certification-item');
+        
+        animateElements.forEach(el => {
+            el.classList.add('animate-on-scroll');
+            observer.observe(el);
+        });
     });
 });
 

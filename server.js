@@ -423,5 +423,6 @@ app.get('/api/portfolio-data', async (req, res) => {
 
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Portfolio server running on port ${PORT}`);
-    console.log(`Admin panel available at: http://localhost:${PORT}/admin`);
+    console.log(`Portfolio available at: http://0.0.0.0:${PORT}`);
+    console.log(`Admin panel available at: http://0.0.0.0:${PORT}/admin`);
 });
