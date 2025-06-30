@@ -1,0 +1,16 @@
+{
+  "name": "thanush-portfolio",
+  "version": "1.0.0",
+  "description": "Personal portfolio website for Thanush S",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["portfolio", "personal", "website"],
+  "author": "Thanush S",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
