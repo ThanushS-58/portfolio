@@ -43,170 +43,16 @@ window.addEventListener('scroll', () => {
     }
 });
 
-// Load portfolio data from API
-async function loadPortfolioData() {
-    try {
-        const response = await fetch('/api/portfolio-data');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        
-        // Update profile data
-        if (data.profile) {
-            updateProfileData(data.profile);
-        }
-        
-        // Update sections with data
-        if (data.education) updateEducationSection(data.education);
-        if (data.experience) updateExperienceSection(data.experience);
-        if (data.projects) updateProjectsSection(data.projects);
-        if (data.skills) updateSkillsSection(data.skills);
-        if (data.awards) updateAwardsSection(data.awards);
-        
-    } catch (error) {
-        console.log('Using static content - API not available');
-        // Fallback to static content already in HTML
-    }
-}
+// Initialize interactive features when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    // Then set up animations
+    const animateElements = document.querySelectorAll('.education-card, .experience-card, .volunteer-card, .project-card, .skill-item, .award-item, .certification-item');
 
-function updateProfileData(profile) {
-    // Update hero section if profile data exists
-    if (profile.name) {
-        const heroTitle = document.querySelector('.hero-title');
-        if (heroTitle) {
-            heroTitle.innerHTML = `Hi, I'm <span class="gradient-text">${profile.name}</span>`;
-        }
-    }
-    
-    if (profile.title) {
-        const heroSubtitle = document.querySelector('.hero-subtitle');
-        if (heroSubtitle) {
-            heroSubtitle.textContent = profile.title;
-        }
-    }
-    
-    if (profile.professional_summary) {
-        const heroDescription = document.querySelector('.hero-description');
-        if (heroDescription) {
-            heroDescription.textContent = profile.professional_summary;
-        }
-    }
-}
-
-function updateEducationSection(education) {
-    const container = document.querySelector('.education-grid');
-    if (!container || education.length === 0) return;
-    
-    container.innerHTML = education.map(edu => `
-        <div class="education-card animate-on-scroll">
-            <div class="education-details">
-                <h3>${edu.degree}</h3>
-                <span class="duration">${edu.duration}</span>
-            </div>
-            <h4>${edu.institution}</h4>
-            ${edu.grade ? `<p class="grade">Grade: ${edu.grade}</p>` : ''}
-            ${edu.description ? `<p>${edu.description}</p>` : ''}
-        </div>
-    `).join('');
-}
-
-function updateExperienceSection(experience) {
-    const container = document.querySelector('.experience-grid');
-    if (!container || experience.length === 0) return;
-    
-    container.innerHTML = experience.map(exp => `
-        <div class="experience-card animate-on-scroll">
-            <div class="experience-header">
-                <h3>${exp.title}</h3>
-                <h4>${exp.company}</h4>
-                <span class="duration">${exp.duration}</span>
-            </div>
-            <p>${exp.description}</p>
-            ${exp.skills ? `
-                <div class="experience-skills">
-                    ${exp.skills.split(',').map(skill => `<span class="skill-tag">${skill.trim()}</span>`).join('')}
-                </div>
-            ` : ''}
-        </div>
-    `).join('');
-}
-
-function updateProjectsSection(projects) {
-    const container = document.querySelector('.projects-grid');
-    if (!container || projects.length === 0) return;
-    
-    container.innerHTML = projects.map(project => `
-        <div class="project-card animate-on-scroll">
-            <div class="project-header">
-                <h3>${project.title}</h3>
-                ${project.github_url ? `<a href="${project.github_url}" target="_blank" class="project-link"><i class="fab fa-github"></i></a>` : ''}
-            </div>
-            <div class="project-content">
-                <p>${project.description}</p>
-                ${project.technologies ? `
-                    <div class="project-tech">
-                        ${project.technologies.split(',').map(tech => `<span class="tech-tag">${tech.trim()}</span>`).join('')}
-                    </div>
-                ` : ''}
-                ${project.features ? `
-                    <div class="project-features">
-                        <h4>Key Features:</h4>
-                        <ul>
-                            ${project.features.split(',').map(feature => `<li>${feature.trim()}</li>`).join('')}
-                        </ul>
-                    </div>
-                ` : ''}
-            </div>
-        </div>
-    `).join('');
-}
-
-function updateSkillsSection(skills) {
-    const container = document.querySelector('.skills-grid');
-    if (!container || skills.length === 0) return;
-    
-    // Group skills by category
-    const skillsByCategory = skills.reduce((acc, skill) => {
-        const category = skill.category || 'Other';
-        if (!acc[category]) acc[category] = [];
-        acc[category].push(skill);
-        return acc;
-    }, {});
-    
-    container.innerHTML = Object.entries(skillsByCategory).map(([category, categorySkills]) => `
-        <div class="skill-category">
-            <h3>${category}</h3>
-            <div class="skills-list">
-                ${categorySkills.map(skill => `
-                    <div class="skill-item animate-on-scroll">
-                        <div class="skill-info">
-                            <span class="skill-name">${skill.name}</span>
-                            <span class="skill-level">${skill.level}</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="width: ${skill.percentage || 0}%"></div>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-    `).join('');
-}
-
-function updateAwardsSection(awards) {
-    const container = document.querySelector('.awards-grid');
-    if (!container || awards.length === 0) return;
-    
-    container.innerHTML = awards.map(award => `
-        <div class="award-item animate-on-scroll">
-            <h3>${award.title}</h3>
-            <h4>${award.event}</h4>
-            <span class="award-year">${award.year}</span>
-            ${award.description ? `<p>${award.description}</p>` : ''}
-        </div>
-    `).join('');
-}
+    animateElements.forEach(el => {
+        el.classList.add('animate-on-scroll');
+        observer.observe(el);
+    });
+});
 
 // Animate elements on scroll
 const observerOptions = {
@@ -221,20 +67,6 @@ const observer = new IntersectionObserver((entries) => {
         }
     });
 }, observerOptions);
-
-// Add animation class to elements
-document.addEventListener('DOMContentLoaded', () => {
-    // Load portfolio data first
-    loadPortfolioData().then(() => {
-        // Then set up animations
-        const animateElements = document.querySelectorAll('.education-card, .experience-card, .volunteer-card, .project-card, .skill-item, .award-item, .certification-item');
-        
-        animateElements.forEach(el => {
-            el.classList.add('animate-on-scroll');
-            observer.observe(el);
-        });
-    });
-});
 
 // Skill bar animations
 const skillBars = document.querySelectorAll('.skill-progress');
@@ -260,23 +92,23 @@ const contactForm = document.getElementById('contactForm');
 if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        
+
         // Get form data
         const formData = new FormData(contactForm);
         const name = formData.get('name');
         const email = formData.get('email');
         const subject = formData.get('subject');
         const message = formData.get('message');
-        
+
         // Create mailto link
         const mailtoLink = `mailto:thanush205s@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`)}`;
-        
+
         // Open email client
         window.location.href = mailtoLink;
-        
+
         // Show success message
         showNotification('Thank you! Your email client should open with the message ready to send.', 'success');
-        
+
         // Reset form
         contactForm.reset();
     });
@@ -290,7 +122,7 @@ function showNotification(message, type = 'info') {
         <span>${message}</span>
         <button onclick="this.parentElement.remove()">&times;</button>
     `;
-    
+
     // Add styles
     notification.style.cssText = `
         position: fixed;
@@ -308,7 +140,7 @@ function showNotification(message, type = 'info') {
         max-width: 400px;
         animation: slideInRight 0.3s ease;
     `;
-    
+
     const closeBtn = notification.querySelector('button');
     closeBtn.style.cssText = `
         background: none;
@@ -319,9 +151,9 @@ function showNotification(message, type = 'info') {
         padding: 0;
         margin-left: auto;
     `;
-    
+
     document.body.appendChild(notification);
-    
+
     // Auto remove after 5 seconds
     setTimeout(() => {
         if (notification.parentElement) {
@@ -334,7 +166,7 @@ function showNotification(message, type = 'info') {
 function typeWriter(element, text, speed = 100) {
     let i = 0;
     element.innerHTML = '';
-    
+
     function type() {
         if (i < text.length) {
             element.innerHTML += text.charAt(i);
@@ -342,7 +174,7 @@ function typeWriter(element, text, speed = 100) {
             setTimeout(type, speed);
         }
     }
-    
+
     type();
 }
 
@@ -360,13 +192,13 @@ document.addEventListener('DOMContentLoaded', () => {
 // Add hover effects to cards
 document.addEventListener('DOMContentLoaded', () => {
     const cards = document.querySelectorAll('.education-card, .experience-card, .volunteer-card, .project-card, .award-item, .certification-item');
-    
+
     cards.forEach(card => {
         card.addEventListener('mouseenter', () => {
             card.style.transform = 'translateY(-10px) scale(1.02)';
             card.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.15)';
         });
-        
+
         card.addEventListener('mouseleave', () => {
             card.style.transform = 'translateY(0) scale(1)';
             card.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.1)';
@@ -388,7 +220,7 @@ window.addEventListener('scroll', () => {
 window.addEventListener('scroll', () => {
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('.nav-link');
-    
+
     let current = '';
     sections.forEach(section => {
         const sectionTop = section.getBoundingClientRect().top;
@@ -397,7 +229,7 @@ window.addEventListener('scroll', () => {
             current = section.getAttribute('id');
         }
     });
-    
+
     navLinks.forEach(link => {
         link.classList.remove('active');
         if (link.getAttribute('href') === `#${current}`) {
@@ -461,11 +293,11 @@ const throttledScrollHandler = throttle(() => {
         navbar.style.background = 'rgba(255, 255, 255, 0.95)';
         navbar.style.boxShadow = 'none';
     }
-    
+
     // Active navigation highlighting
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('.nav-link');
-    
+
     let current = '';
     sections.forEach(section => {
         const sectionTop = section.getBoundingClientRect().top;
@@ -474,7 +306,7 @@ const throttledScrollHandler = throttle(() => {
             current = section.getAttribute('id');
         }
     });
-    
+
     navLinks.forEach(link => {
         link.classList.remove('active');
         if (link.getAttribute('href') === `#${current}`) {
